@@ -1,0 +1,16 @@
+.register-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 34px;
+
+  background: var(--background-color-2);
+}
+
+.error {
+  position: absolute;
+  bottom: -20px;
+  font-size: 12px;
+  color: red;
+}

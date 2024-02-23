@@ -1,0 +1,9 @@
+.login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 34px;
+
+  background: var(--background-color-1);
+}

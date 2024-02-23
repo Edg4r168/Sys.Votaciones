@@ -1,0 +1,13 @@
+.btn-showPass {
+  position: absolute;
+  right: 0;
+  top: 54%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 33px;
+  height: 30px;
+  margin: 0;
+  margin-right: 4px;
+  padding: 0;
+}

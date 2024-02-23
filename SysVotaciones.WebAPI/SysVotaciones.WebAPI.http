@@ -1,0 +1,6 @@
+@SysVotaciones.WebAPI_HostAddress = http://localhost:5217
+
+GET {{SysVotaciones.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
