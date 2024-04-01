@@ -1,0 +1,70 @@
+.dashboard {
+  display: grid;
+  /* sidebar main*/
+  grid-template-columns: 1fr 6fr;
+  /* header content */
+  grid-template-rows: 1fr 10fr;
+  grid-template-areas:
+    "header header"
+    "sidebar content";
+  color: #36202c;
+}
+
+.dashboard .header-dashboard {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 12px 32px;
+
+  background-color: #6ee7bf;
+  grid-area: header;
+}
+
+.dashboard main {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  grid-area: content;
+}
+
+.dashboard main .card {
+  position: absolute;
+}
+
+.sidebar {
+  padding: 8px 0;
+  grid-area: sidebar;
+}
+
+.sidebar .navigation {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px;
+  text-align: left;
+}
+
+.navigation a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #808692;
+  transition: background-color 0.3s ease-out;
+}
+
+.navigation a:hover {
+  background-color: #f3f4f6;
+  color: #36202c;
+}
+
+.dashboard .border {
+  border: 1px solid #e5e7eb;
+}
+
+.dashboard .isSelected {
+  background-color: #f3f4f6;
+  color: #36202c;
+}
