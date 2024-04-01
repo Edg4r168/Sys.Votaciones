@@ -18,16 +18,20 @@ namespace SysVotaciones.DAL
             _connection = new SqlConnection(connectionString);
         }
 
-        public List<Student> GetStudents()
+        public List<Student> GetStudents(int offset = 0, int amount = 0)
         {
             try
             {
                 string query = "SELECT s.*, y.AÑO_CARRERA, c.NOMBRE " +
                                             "FROM ESTUDIANTE s " +
                                             "JOIN AÑO y ON s.ID_AÑO = y.ID " +
-                                            "JOIN CARRERA c ON s.ID_CARRERA = c.ID;";
+                                            "JOIN CARRERA c ON s.ID_CARRERA = c.ID " +
+                                            "ORDER BY s.CODIGO DESC OFFSET @offset ROWS " +
+                                            "FETCH NEXT @amount ROWS ONLY;";
 
                 SqlCommand cmd = new(query, _connection);
+                cmd.Parameters.AddWithValue("offset", offset);
+                cmd.Parameters.AddWithValue("amount", amount == 0 ? 6 : amount);
 
                 _connection.Open();
 
@@ -52,6 +56,29 @@ namespace SysVotaciones.DAL
                 }
 
                 return list;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            finally
+            {
+                if (_connection.State == ConnectionState.Open) _connection.Close();
+            }
+        }
+
+        public int GetTotalStudents()
+        {
+            try
+            {
+                var cmd = new SqlCommand("SELECT TOTAL FROM TOTAL_ESTUDIANTES", _connection);
+
+                _connection.Open();
+
+                int total = (int)cmd.ExecuteScalar();
+
+                return total;
             }
             catch (Exception ex)
             {
@@ -144,7 +171,7 @@ namespace SysVotaciones.DAL
                 cmd.Parameters.AddWithValue("codigo", student.StudentCode);
                 cmd.Parameters.AddWithValue("yearId", student.CareerYearId);
                 cmd.Parameters.AddWithValue("careerId", student.CareerId);
-                cmd.Parameters.AddWithValue("password", student.Password);
+                cmd.Parameters.AddWithValue("password", string.IsNullOrWhiteSpace(student.Password) ? "": student.Password);
 
                 int rowsAffected = cmd.ExecuteNonQuery();
                 return rowsAffected;
@@ -265,6 +292,55 @@ namespace SysVotaciones.DAL
 
                 int rowsAffected = cmd.ExecuteNonQuery();
                 return rowsAffected;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            finally
+            {
+                if (_connection.State == ConnectionState.Open) _connection.Close();
+            }
+        }
+
+        public List<Student> SearchStudents(string keyword)
+        {
+            try
+            {
+                string query = "SELECT s.*, y.AÑO_CARRERA, c.NOMBRE " +
+                                "FROM ESTUDIANTE s " +
+                                "JOIN AÑO y ON s.ID_AÑO = y.ID " +
+                                "JOIN CARRERA c ON  s.ID_CARRERA = c.ID " +
+                                "WHERE CODIGO LIKE @keyword  + '%'";
+
+                var cmd = new SqlCommand(query, _connection);
+                cmd.Parameters.AddWithValue("keyword", keyword);
+
+                _connection.Open();
+
+                var reader = cmd.ExecuteReader();
+                List<Student> list = [];
+
+                while (reader.Read())
+                {
+                    list.Add(new Student()
+                    {
+                        StudentCode = reader.GetString(0),
+                        oCareerYear = new Year()
+                        {
+                            Id = reader.GetInt32(1),
+                            CareerYear = reader.GetString(4)
+                        },
+                        oCareer = new Career()
+                        {
+                            Id = reader.GetInt32(2),
+                            Name = reader.GetString(5)
+                        }
+                    });
+                }
+
+                return list;
             }
             catch (Exception ex)
             {

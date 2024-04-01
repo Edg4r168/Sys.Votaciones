@@ -14,11 +14,16 @@ namespace SysVotaciones.DAL
             _connection = new SqlConnection (connectionString);
         }
 
-        public List<Category> GetCategories ()
+        public List<Category> GetCategories (int offset = 0, int amount = 0)
         {
             try
             {
-                var cmd = new SqlCommand("SELECT * FROM CATEGORIA", _connection);
+                string query = "SELECT * FROM CATEGORIA ORDER BY ID DESC OFFSET @offset ROWS " +
+                                                        "FETCH NEXT @amount ROWS ONLY;";
+
+                var cmd = new SqlCommand(query, _connection);
+                cmd.Parameters.AddWithValue("offset", offset);
+                cmd.Parameters.AddWithValue("amount", amount == 0 ? 6 : amount);
 
                 _connection.Open();
 
@@ -35,6 +40,29 @@ namespace SysVotaciones.DAL
                 }
 
                 return list;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            finally
+            {
+                if (_connection.State == ConnectionState.Open) _connection.Close();
+            }
+        }
+
+        public int GetTotalCategories()
+        {
+            try
+            {
+                var cmd = new SqlCommand("SELECT TOTAL FROM TOTAL_CATEGORIAS", _connection);
+
+                _connection.Open();
+
+                int total = (int)cmd.ExecuteScalar();
+
+                return total;
             }
             catch (Exception ex)
             {
@@ -85,13 +113,13 @@ namespace SysVotaciones.DAL
         {
             try
             {
-                SqlCommand cmd = new("INSERT INTO CATEGORIA (NOMBRE) VALUES (@category)", _connection);
+                SqlCommand cmd = new("INSERT INTO CATEGORIA (NOMBRE) VALUES (@category); SELECT SCOPE_IDENTITY() AS ID;", _connection);
                 cmd.Parameters.AddWithValue("category", category.Name);
 
                 _connection.Open();
 
-                int rowsAffected = cmd.ExecuteNonQuery();
-                return rowsAffected;
+                int currentId = Convert.ToInt32(cmd.ExecuteScalar());
+                return currentId;
             }
             catch (Exception ex)
             {
@@ -153,6 +181,40 @@ namespace SysVotaciones.DAL
             finally
             {
                 if (_connection.State == ConnectionState.Open) _connection.Close();
+            }
+        }
+
+        public List<Category> SearchCategories(string keyword)
+        {
+            try
+            {
+                var cmd = new SqlCommand("SELECT * FROM CATEGORIA WHERE NOMBRE LIKE @keyword + '%'", _connection);
+                cmd.Parameters.AddWithValue("keyword", keyword);
+
+                _connection.Open();
+
+                var reader = cmd.ExecuteReader();
+                List<Category> list = [];
+
+                while (reader.Read())
+                {
+                    list.Add(new Category()
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                    });
+                }
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            finally
+            {
+                if (_connection.State == ConnectionState.Open) _connection.Close(); 
             }
         }
     }
