@@ -12,7 +12,7 @@ namespace SysVotaciones.EN
         public string? Name { get; set; }
         public string? Description { get; set; }
         public int State { get; set; }
-        public int CategoryId { get; set; }
-        public Category? oCategory { get; set; }
+        public int TypeContestId { get; set; }
+        public TypeContest? oTypeContest { get; set; }
     }
 }
