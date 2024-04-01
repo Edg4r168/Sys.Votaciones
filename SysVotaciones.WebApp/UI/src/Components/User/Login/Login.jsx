@@ -1,10 +1,11 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { loginService } from "src/Services/loginService.js";
 import { ToggleablePasswordField } from "src/Components/ToggleablePasswordField/ToggleablePasswordField";
 
-import "../Register/index.css";
-import { useState } from "react";
 import { Notification } from "../../Notification/Notification";
+import { useUser } from "src/hooks/useUser";
+import { Redirect } from "wouter";
+
+import "../Register/index.css";
 
 const initialValues = {
   studentCode: "",
@@ -24,23 +25,23 @@ const validateFiels = ({ studentCode, password }) => {
 };
 
 export const Login = () => {
-  const [error, setError] = useState("");
+  const { isLogged, errorMessage, login, setErrorMessage } = useUser();
 
-  const handleOnSubmit = ({ studentCode, password }) => {
-    loginService({ studentCode, password })
-      .then((token) => {
-        console.log(token);
-      })
-      .catch((err) => {
-        setError(err.message);
-      });
+  const handleOnSubmit = (user) => {
+    return login(user);
   };
 
   return (
     <>
-      {error && (
-        <Notification duration={5000} onTimeout={() => setError("")}>
-          {error}
+      {isLogged && <Redirect to="/home" replace />}
+
+      {errorMessage && (
+        <Notification
+          duration={5000}
+          type="error"
+          onAnimationEnd={() => setErrorMessage("")}
+        >
+          {errorMessage}
         </Notification>
       )}
 
@@ -69,7 +70,7 @@ export const Login = () => {
               <ToggleablePasswordField />
             </div>
 
-            <button className="btn" type="submit">
+            <button className="btn button" type="submit">
               Aceptar
             </button>
           </Form>
