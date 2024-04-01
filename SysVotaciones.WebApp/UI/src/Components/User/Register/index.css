@@ -5,12 +5,14 @@
   align-items: center;
   gap: 34px;
 
-  background: var(--background-color-2);
+  background: var(--background-color-3);
 }
 
 .error {
   position: absolute;
   bottom: -20px;
   font-size: 12px;
+  font-weight: bold;
+  padding: 4px;
   color: red;
 }
