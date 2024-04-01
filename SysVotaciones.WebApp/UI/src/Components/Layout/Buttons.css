@@ -1,0 +1,101 @@
+.standardStyles {
+  height: 48px;
+  width: 100%;
+  /* max-width: 108px; */
+  padding: 0.6em 1.2em;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  color: #fbfdff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.buttonDefault {
+  border: 1px solid #226b8c;
+  background-image: var(--background-btn-default);
+  background-size: 200% 100%;
+}
+
+.buttonDefault:hover {
+  animation: background-shine 2s linear infinite;
+}
+
+.buttonDefault:active {
+  background-image: var(--background-btn-active);
+}
+
+.buttonDefault:disabled {
+  background-image: var(--background-btn-disabled);
+}
+
+@keyframes background-shine {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/*********************************************************/
+.buttonSearch {
+  height: 40px;
+  width: 80px;
+  padding: 4px 8px;
+  border: none;
+  background-color: #3b82f6;
+}
+
+/************************************************************/
+
+.roundButtonAdd {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 41px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background-color: #a0d7ff;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/************************************************************/
+.buttonGreen {
+  border: 1px solid #16a34a;
+  background-color: #16a34a;
+  transition: background-color 0.1s linear;
+}
+
+.buttonGreen:hover {
+  background-color: #107a37;
+}
+
+/************************************************************/
+.buttonRed {
+  border: 1px solid #dc2626;
+  background-color: #ef4444;
+  transition: background-color 0.1s linear;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.buttonRed:hover {
+  background-color: #dc2626;
+}
+
+/************************************************************/
+.buttonShowMore {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 30px;
+  padding: 5px 4px;
+  border: none;
+  border-radius: 50%;
+  color: black;
+  cursor: pointer;
+}
