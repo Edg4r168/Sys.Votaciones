@@ -38,7 +38,9 @@ namespace SysVotaciones.BLL
             return rowsAffected;
         }*/
 
-        public List<Year> GetAll() =>  _yearDAL.GetYears();
+        public List<Year> GetAll(int offset, int amount) =>  _yearDAL.GetYears(offset, amount);
+
+        public int GetTotal() => _yearDAL.GetTotalYears();
 
         public Year? GeById(int id)
         {
@@ -50,8 +52,8 @@ namespace SysVotaciones.BLL
         {
             if (year.CareerYear == null) return 0;
 
-            int rowsAffected = _yearDAL.SaveYear(year);
-            return rowsAffected;
+            int currentId = _yearDAL.SaveYear(year);
+            return currentId;
         }
 
         public int Delete(int id) 
@@ -66,6 +68,13 @@ namespace SysVotaciones.BLL
 
             int rowsAffected = _yearDAL.UpdateYear(year);
             return rowsAffected;
+        }
+
+        public List<Year> Search(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword)) return [];
+
+            return _yearDAL.SearchYears(keyword);
         }
     }
 }

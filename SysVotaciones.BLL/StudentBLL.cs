@@ -12,7 +12,9 @@ namespace SysVotaciones.BLL
             _studentDAL = new StudentDAL(con);
         }
 
-        public List<Student> GetAll() => _studentDAL.GetStudents();
+        public List<Student> GetAll(int offset, int amount) => _studentDAL.GetStudents(offset, amount);
+
+        public int GetTotal() => _studentDAL.GetTotalStudents();
 
         public Student? GeById(string studentCode)
         {
@@ -29,7 +31,6 @@ namespace SysVotaciones.BLL
                 studentCode = student.StudentCode,
                 careerYearId = student.CareerYearId,
                 careerId = student.CareerId,
-                password = student.Password
             };
 
             bool isValid = Helper.AllPropertiesHaveValue(studentToEvalueate);
@@ -72,6 +73,13 @@ namespace SysVotaciones.BLL
 
             int rowsAffected = _studentDAL.UpdateStudent(student);
             return rowsAffected;
+        }
+
+        public List<Student> Search(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword)) return [];
+
+            return _studentDAL.SearchStudents(keyword);
         }
     }
 }

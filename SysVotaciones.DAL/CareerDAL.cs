@@ -13,11 +13,16 @@ namespace SysVotaciones.DAL
             _connection = new SqlConnection(connectionString);
         }
 
-        public List<Career> GetCareers()
+        public List<Career> GetCareers(int offset = 0, int amount = 0)
         {
             try
             {
-                SqlCommand cmd = new("SELECT * FROM CARRERA", _connection);
+                string query = "SELECT * FROM CARRERA ORDER BY ID DESC OFFSET @offset ROWS " +
+                                                       "FETCH NEXT @amount ROWS ONLY;";
+
+                SqlCommand cmd = new(query, _connection);
+                cmd.Parameters.AddWithValue("offset", offset);
+                cmd.Parameters.AddWithValue("amount", amount == 0 ? 6 : amount);
 
                 _connection.Open();
 
@@ -35,6 +40,29 @@ namespace SysVotaciones.DAL
                 }
 
                 return list;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            finally
+            {
+                if (_connection.State == ConnectionState.Open) _connection.Close();
+            }
+        }
+
+        public int GetTotalCareers()
+        {
+            try
+            {
+                var cmd = new SqlCommand("SELECT TOTAL FROM TOTAL_CARRERAS", _connection);
+
+                _connection.Open();
+
+                int total = (int)cmd.ExecuteScalar();
+
+                return total;
             }
             catch (Exception ex)
             {
@@ -85,13 +113,13 @@ namespace SysVotaciones.DAL
         {
             try
             {
-                SqlCommand cmd = new("INSERT INTO CARRERA (NOMBRE) VALUES (@career)", _connection);
+                SqlCommand cmd = new("INSERT INTO CARRERA (NOMBRE) VALUES (@career); SELECT SCOPE_IDENTITY() AS ID;", _connection);
                 cmd.Parameters.AddWithValue("career", career.Name);
 
                 _connection.Open();
 
-                int rowsAffected = cmd.ExecuteNonQuery();
-                return rowsAffected;
+                int currentId = Convert.ToInt32(cmd.ExecuteScalar());
+                return currentId;
             }
             catch (Exception ex)
             {
@@ -144,6 +172,40 @@ namespace SysVotaciones.DAL
 
                 int rowsAffected = cmd.ExecuteNonQuery();
                 return rowsAffected;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            finally
+            {
+                if (_connection.State == ConnectionState.Open) _connection.Close();
+            }
+        }
+
+        public List<Career> SearchCareers(string keyword)
+        {
+            try
+            {
+                var cmd = new SqlCommand("SELECT * FROM CARRERA WHERE NOMBRE LIKE @keyword + '%'", _connection);
+                cmd.Parameters.AddWithValue("keyword", keyword);
+
+                _connection.Open();
+
+                var reader = cmd.ExecuteReader();
+                List<Career> list = [];
+
+                while (reader.Read())
+                {
+                    list.Add(new Career()
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                    });
+                }
+
+                return list;
             }
             catch (Exception ex)
             {
