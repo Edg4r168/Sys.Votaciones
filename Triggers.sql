@@ -1,0 +1,285 @@
+/**********************************************/
+/***************** Insert *******************/
+/**********************************************/
+DROP TRIGGER IF EXISTS Increase_AÑO;
+CREATE TRIGGER Increase_AÑO
+ON AÑO
+AFTER INSERT 
+AS 
+BEGIN
+	DECLARE @curentQuantity INT;
+	DECLARE @rowsQuantity INT;
+
+	SELECT @curentQuantity = TOTAL FROM TOTAL_AÑOS; 
+	
+	SET @rowsQuantity = @curentQuantity + 1;
+
+	UPDATE TOTAL_AÑOS SET TOTAL = @rowsQuantity;
+END;
+
+SElECT * FROM TOTAL_AÑOS;
+SElECT * FROM AÑO;
+UPDATE TOTAL_AÑOS SET TOTAL = 5;
+
+
+DROP TRIGGER IF EXISTS Increase_CARRERA;
+CREATE TRIGGER Increase_CARRERA
+ON CARRERA
+AFTER INSERT 
+AS 
+BEGIN
+	DECLARE @curentQuantity INT;
+	DECLARE @rowsQuantity INT;
+
+	SELECT @curentQuantity = TOTAL FROM TOTAL_CARRERAS; 
+	
+	SET @rowsQuantity = @curentQuantity + 1;
+
+	UPDATE TOTAL_CARRERAS SET TOTAL = @rowsQuantity;
+END;
+
+SElECT * FROM TOTAL_CARRERAS;
+SElECT * FROM CARRERA;
+UPDATE TOTAL_CARRERAS SET TOTAL = 7;
+
+DROP TRIGGER IF EXISTS Increase_ESTUDIANTE;
+CREATE TRIGGER Increase_ESTUDIANTE
+ON ESTUDIANTE
+AFTER INSERT 
+AS 
+BEGIN
+	DECLARE @curentQuantity INT;
+	DECLARE @rowsQuantity INT;
+
+	SELECT @curentQuantity = TOTAL FROM TOTAL_ESTUDIANTES; 
+	
+	SET @rowsQuantity = @curentQuantity + 1;
+
+	UPDATE TOTAL_ESTUDIANTES SET TOTAL = @rowsQuantity;
+END;
+
+SElECT * FROM TOTAL_ESTUDIANTES;
+SElECT * FROM ESTUDIANTE;
+UPDATE TOTAL_ESTUDIANTES SET TOTAL = 17;
+
+DROP TRIGGER IF EXISTS Increase_CATEGORIA;
+CREATE TRIGGER Increase_CATEGORIA
+ON CATEGORIA
+AFTER INSERT 
+AS 
+BEGIN
+	DECLARE @curentQuantity INT;
+	DECLARE @rowsQuantity INT;
+
+	SELECT @curentQuantity = TOTAL FROM TOTAL_CATEGORIAS; 
+	
+	SET @rowsQuantity = @curentQuantity + 1;
+
+	UPDATE TOTAL_CATEGORIAS SET TOTAL = @rowsQuantity;
+END;
+
+SElECT * FROM TOTAL_CATEGORIAS;
+SElECT * FROM CATEGORIA;
+UPDATE TOTAL_CATEGORIAS SET TOTAL = 16;
+
+DROP TRIGGER IF EXISTS Increase_TIPOCONCURSO;
+CREATE TRIGGER Increase_TIPOCONCURSO
+ON TIPOCONCURSO
+AFTER INSERT 
+AS 
+BEGIN
+	DECLARE @curentQuantity INT;
+	DECLARE @rowsQuantity INT;
+
+	SELECT @curentQuantity = TOTAL FROM TOTAL_TIPOSCONCURSO; 
+	
+	SET @rowsQuantity = @curentQuantity + 1;
+
+	UPDATE TOTAL_TIPOSCONCURSO SET TOTAL = @rowsQuantity;
+END;
+
+SElECT * FROM TOTAL_TIPOSCONCURSO;
+SElECT * FROM TIPOCONCURSO;
+UPDATE TOTAL_TIPOSCONCURSO SET TOTAL = 2;
+
+DROP TRIGGER IF EXISTS Increase_CONCURSO;
+CREATE TRIGGER Increase_CONCURSO
+ON CONCURSO
+AFTER INSERT 
+AS 
+BEGIN
+	DECLARE @curentQuantity INT;
+	DECLARE @rowsQuantity INT;
+
+	SELECT @curentQuantity = TOTAL FROM TOTAL_CONCURSOS; 
+	
+	SET @rowsQuantity = @curentQuantity + 1;
+
+	UPDATE TOTAL_CONCURSOS SET TOTAL = @rowsQuantity;
+END;
+
+SElECT * FROM TOTAL_CONCURSOS;
+SElECT * FROM CONCURSO;
+UPDATE TOTAL_CONCURSOS SET TOTAL = 4;
+
+DROP TRIGGER IF EXISTS Increase_PARTICIPANTE;
+CREATE TRIGGER Increase_PARTICIPANTE
+ON PARTICIPANTE
+AFTER INSERT 
+AS 
+BEGIN
+	DECLARE @curentQuantity INT;
+	DECLARE @rowsQuantity INT;
+
+	SELECT @curentQuantity = TOTAL FROM TOTAL_PARTICIPANTES; 
+	
+	SET @rowsQuantity = @curentQuantity + 1;
+
+	UPDATE TOTAL_PARTICIPANTES SET TOTAL = @rowsQuantity;
+END;
+
+SELECT * FROM PARTICIPANTE;
+SELECT * FROM TOTAL_PARTICIPANTES;
+UPDATE TOTAL_PARTICIPANTES SET TOTAL = 4;
+
+/**********************************************/
+/***************** Delete *******************/
+/**********************************************/
+DROP TRIGGER IF EXISTS Decrease_AÑO;
+CREATE TRIGGER Decrease_AÑO
+ON AÑO
+AFTER DELETE 
+AS 
+BEGIN
+	IF @@ROWCOUNT > 0
+	BEGIN
+		DECLARE @curentQuantity INT;
+		DECLARE @rowsQuantity INT;
+
+		SELECT @curentQuantity = TOTAL FROM TOTAL_AÑOS; 
+	
+		SET @rowsQuantity = @curentQuantity - @@ROWCOUNT;
+
+		UPDATE TOTAL_AÑOS SET TOTAL = @rowsQuantity;
+	END
+END;
+
+DROP TRIGGER IF EXISTS Decrease_CARRERA;
+CREATE TRIGGER Decrease_CARRERA
+ON CARRERA
+AFTER DELETE 
+AS 
+BEGIN
+	IF @@ROWCOUNT > 0
+	BEGIN
+		DECLARE @curentQuantity INT;
+		DECLARE @rowsQuantity INT;
+
+		SELECT @curentQuantity = TOTAL FROM TOTAL_CARRERAS; 
+	
+		SET @rowsQuantity = @curentQuantity - @@ROWCOUNT;
+
+		UPDATE TOTAL_CARRERAS SET TOTAL = @rowsQuantity;
+	END
+END;
+
+DROP TRIGGER IF EXISTS Decrease_ESTUDIANTE;
+CREATE TRIGGER Decrease_ESTUDIANTE
+ON ESTUDIANTE
+AFTER DELETE 
+AS 
+BEGIN
+	IF @@ROWCOUNT > 0
+	BEGIN
+		DECLARE @curentQuantity INT;
+		DECLARE @rowsQuantity INT;
+
+		SELECT @curentQuantity = TOTAL FROM TOTAL_ESTUDIANTES; 
+	
+		SET @rowsQuantity = @curentQuantity - @@ROWCOUNT;
+
+		UPDATE TOTAL_ESTUDIANTES SET TOTAL = @rowsQuantity;
+	END
+END;
+
+DROP TRIGGER IF EXISTS Decrease_CATEGORIA;
+CREATE TRIGGER Decrease_CATEGORIA
+ON CATEGORIA
+AFTER DELETE 
+AS 
+BEGIN
+	IF @@ROWCOUNT > 0
+	BEGIN
+		DECLARE @curentQuantity INT;
+		DECLARE @rowsQuantity INT;
+
+		SELECT @curentQuantity = TOTAL FROM TOTAL_CATEGORIAS; 
+	
+		SET @rowsQuantity = @curentQuantity - @@ROWCOUNT;
+
+		UPDATE TOTAL_CATEGORIAS SET TOTAL = @rowsQuantity;
+	END
+END;
+
+DROP TRIGGER IF EXISTS Decrease_TIPOCONCURSO;
+CREATE TRIGGER Decrease_TIPOCONCURSO
+ON TIPOCONCURSO
+AFTER DELETE 
+AS 
+BEGIN
+	IF @@ROWCOUNT > 0
+	BEGIN
+		DECLARE @curentQuantity INT;
+		DECLARE @rowsQuantity INT;
+
+		SELECT @curentQuantity = TOTAL FROM TOTAL_TIPOSCONCURSO; 
+	
+		SET @rowsQuantity = @curentQuantity - @@ROWCOUNT;
+
+		UPDATE TOTAL_TIPOSCONCURSO SET TOTAL = @rowsQuantity;
+	END
+END;
+
+DROP TRIGGER IF EXISTS Decrease_CONCURSO;
+CREATE TRIGGER Decrease_CONCURSO
+ON CONCURSO
+AFTER DELETE 
+AS 
+BEGIN
+	IF @@ROWCOUNT > 0
+	BEGIN
+		DECLARE @curentQuantity INT;
+		DECLARE @rowsQuantity INT;
+
+		SELECT @curentQuantity = TOTAL FROM TOTAL_CONCURSOS; 
+	
+		SET @rowsQuantity = @curentQuantity - @@ROWCOUNT;
+
+		UPDATE TOTAL_CONCURSOS SET TOTAL = @rowsQuantity;
+	END
+END;
+
+
+DROP TRIGGER IF EXISTS Decrease_PARTICIPANTE;
+CREATE TRIGGER Decrease_PARTICIPANTE
+ON PARTICIPANTE
+AFTER DELETE 
+AS 
+BEGIN
+-- Verificar si se eliminaron filas
+	IF @@ROWCOUNT > 0
+	BEGIN
+		DECLARE @curentQuantity INT;
+		DECLARE @rowsQuantity INT;
+
+		SELECT @curentQuantity = TOTAL FROM TOTAL_PARTICIPANTES; 
+	
+		SET @rowsQuantity = @curentQuantity - @@ROWCOUNT;
+
+		UPDATE TOTAL_PARTICIPANTES SET TOTAL = @rowsQuantity;
+	END
+END;
+
+DELETE PARTICIPANTE WHERE ID = 3
+SELECT * FROM PARTICIPANTE 
+SELECT * FROM TOTAL_PARTICIPANTES
