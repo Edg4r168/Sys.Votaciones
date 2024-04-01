@@ -13,68 +13,15 @@ namespace SysVotaciones.DAL
             _connection = new SqlConnection(connectionString);
         }
 
-        /*public async Task<List<Year>> GetYearsAsync()
+        public List<Year> GetYears(int offset = 0, int amount = 0)
         {
-            var cmd = await CommonDB.GetCommandAsync();
-            //if (cmd == null) throw new Exception("Erro inesperado");
-
-            cmd.CommandText = "SELECT * FROM AÑO";
-
-            var reader = await CommonDB.ExecuteReaderAsync(cmd);
-            List<Year> list = [];    
-
-           if (reader != null)
-           {
-                while (await reader.ReadAsync())
-                {
-                    list.Add(new Year()
-                    {
-                        Id = reader.GetInt32(0),
-                        CareerYear = reader.GetString(1),
-                    });
-                }
-           }
-
-           return list;
-        }
-
-        public async Task<Year> GetYearAsync(int id)
-        {
-            var cmd = await CommonDB.GetCommandAsync();
-            cmd.CommandText = "SELECT * FROM AÑO WHERE ID = @id";
-            cmd.Parameters.AddWithValue("id", id);
-
-            var reader = await CommonDB.ExecuteReaderAsync(cmd);
-            Year year = new();
-
-            if (reader != null && await reader.ReadAsync())
-            {
-                year.Id = reader.GetInt32(0);
-                year.CareerYear = reader.GetString(1);
-            }
-
-            return year;
-        }
-
-        public async Task<int> SaveYearAsync(Year year)
-        {
-            var cmd = await CommonDB.GetCommandAsync();
-            cmd.CommandText = "INSERT INTO AÑO (AÑO_CARRERA) VALUES (@careerYear)";
-            cmd.Parameters.AddWithValue("careerYear", year.CareerYear);
-
-            int rowsAffected = await CommonDB.ExecuteCommandAsync(cmd);
-            return rowsAffected;
-        }*/
-
-        public List<Year> GetYears()
-        {
-            //var cmd = CommonDB.GetCommand();
-            //cmd.CommandText = "SELECT * FROM AÑO";
-            //var reader = CommonDB.ExecuteDataReader(cmd);
-
             try
             {
-                SqlCommand cmd = new("SELECT * FROM AÑO", _connection);
+                string query = "SELECT * FROM AÑO ORDER BY ID DESC OFFSET @offset ROWS " +
+                                                                    "FETCH NEXT @amount ROWS ONLY;";
+                SqlCommand cmd = new(query, _connection);
+                cmd.Parameters.AddWithValue("offset", offset);
+                cmd.Parameters.AddWithValue("amount", amount == 0 ? 6 : amount);
 
                 _connection.Open();
 
@@ -104,11 +51,31 @@ namespace SysVotaciones.DAL
             }
         }
 
+        public int GetTotalYears()
+        {
+            try
+            {
+                var cmd = new SqlCommand("SELECT TOTAL FROM TOTAL_AÑOS", _connection);
+
+                _connection.Open();
+
+                int total = (int)cmd.ExecuteScalar();
+
+                return total;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            finally
+            {
+                if (_connection.State == ConnectionState.Open) _connection.Close();
+            }
+        }
+
         public Year? GetYear(int id)
         {
-            //var cmd = CommonDB.GetCommand();
-            //cmd.CommandText = "SELECT * FROM AÑO WHERE ID = @id";
-            //var reader = CommonDB.ExecuteDataReader(cmd);
             try
             {
                 SqlCommand cmd = new("SELECT * FROM AÑO WHERE ID = @id", _connection);
@@ -143,20 +110,15 @@ namespace SysVotaciones.DAL
 
         public int SaveYear(Year year)
         {
-            //var cmd = CommonDB.GetCommand();
-            //cmd.CommandText = "INSERT INTO AÑO (AÑO_CARRERA) VALUES (@careerYear)";
-            //cmd.Parameters.AddWithValue("careerYear", year.CareerYear);
-            //int rowsAffected = CommonDB.ExecuteCommand(cmd);
-
             try
             {
-                SqlCommand cmd = new("INSERT INTO AÑO (AÑO_CARRERA) VALUES (@careerYear)", _connection);
+                SqlCommand cmd = new("INSERT INTO AÑO (AÑO_CARRERA) VALUES (@careerYear); SELECT SCOPE_IDENTITY() AS ID;", _connection);
                 cmd.Parameters.AddWithValue("careerYear", year.CareerYear);
 
                 _connection.Open();
 
-                int rowsAffected = cmd.ExecuteNonQuery();
-                return rowsAffected;
+                int currentId = Convert.ToInt32(cmd.ExecuteScalar());
+                return currentId;
             }
             catch (Exception ex)
             {
@@ -171,11 +133,6 @@ namespace SysVotaciones.DAL
 
         public int DeleteYear(int id) 
         {
-            //var cmd = CommonDB.GetCommand();
-            //cmd.CommandText = "DELETE AÑO WHERE ID = @id";
-            //cmd.Parameters.AddWithValue("id", id);
-            //int rowsAffected = CommonDB.ExecuteCommand(cmd);
-
             try
             {
                 SqlCommand cmd = new("DELETE AÑO WHERE ID = @id", _connection);
@@ -199,11 +156,6 @@ namespace SysVotaciones.DAL
 
         public int UpdateYear(Year year)
         {
-            //var cmd = CommonDB.GetCommand();
-            //cmd.CommandText = "sp_UpdateYear";
-            //cmd.CommandType = CommandType.StoredProcedure;
-            //int rowsAffected = CommonDB.ExecuteCommand(cmd);
-
             try
             {
                 SqlCommand cmd = new("sp_UpdateYear", _connection);
@@ -219,6 +171,40 @@ namespace SysVotaciones.DAL
 
                 int rowsAffected = cmd.ExecuteNonQuery();
                 return rowsAffected;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            finally
+            {
+                if (_connection.State == ConnectionState.Open) _connection.Close();
+            }
+        }
+
+        public List<Year> SearchYears(string keyword)
+        {
+            try
+            {
+                var cmd = new SqlCommand("SELECT * FROM AÑO WHERE AÑO_CARRERA LIKE @keyword + '%'", _connection);
+                cmd.Parameters.AddWithValue("keyword", keyword);
+
+                _connection.Open();
+
+                var reader = cmd.ExecuteReader();
+                List<Year> list = [];
+
+                while (reader.Read())
+                {
+                    list.Add(new Year()
+                    {
+                        Id = reader.GetInt32(0),
+                        CareerYear = reader.GetString(1),
+                    });
+                }
+
+                return list;
             }
             catch (Exception ex)
             {
