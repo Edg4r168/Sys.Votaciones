@@ -25,7 +25,9 @@ builder.Services.AddScoped(serviceProvider => new CareerBLL(connectionString));
 builder.Services.AddScoped(serviceProvider => new StudentBLL(connectionString));
 builder.Services.AddScoped(serviceProvider => new ContestBLL(connectionString));
 builder.Services.AddScoped(serviceProvider => new CategoryBLL(connectionString));
+builder.Services.AddScoped(serviceProvider => new ParticipantBLL(connectionString));
 builder.Services.AddScoped(serviceProvider => new AdminBLL(connectionString));
+builder.Services.AddScoped(serviceProvider => new TypeContestBLL(connectionString));
 
 var app = builder.Build();
 
