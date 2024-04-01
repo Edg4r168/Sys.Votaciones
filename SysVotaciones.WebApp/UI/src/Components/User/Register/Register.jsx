@@ -39,8 +39,7 @@ const validateFiels = (values) => {
 };
 
 export const Register = () => {
-  const [registered, setRegistered] = useState(false);
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState({ error: "", success: "" });
   const { careers } = useCareers();
   const { careerYears } = useCareerYears();
   const [, navigate] = useLocation();
@@ -48,28 +47,38 @@ export const Register = () => {
   const hanleOnSubmit = (values) => {
     // Deveulver una promesa y estara en submit hata que se resuelve
     return registerService(values)
-      .then((res) => {
-        setRegistered(res);
+      .then(({ ok, message }) => {
+        if (!ok) return setMessage({ error: message });
+
+        setMessage({ success: message });
       })
       .catch((err) => {
-        setError(err.message);
+        setMessage({ error: err.message });
       });
   };
 
   return (
     <>
-      {registered && (
+      {message.success && (
         <Notification
           duration={NOTIFICATION_DURATION}
-          onTimeout={() => navigate("/login-user")}
+          type="success"
+          onAnimationEnd={() => {
+            setMessage({ success: "" });
+            navigate("/login-user");
+          }}
         >
-          Te has registrado correctamente
+          {message.success}
         </Notification>
       )}
 
-      {error && (
-        <Notification duration={5000} onTimeout={() => setError("")}>
-          {error}
+      {message.error && (
+        <Notification
+          duration={5000}
+          type="error"
+          onAnimationEnd={() => setMessage({ error: "" })}
+        >
+          {message.error}
         </Notification>
       )}
 
@@ -100,7 +109,7 @@ export const Register = () => {
                 <option value="" disabled>
                   Selcionar carrera
                 </option>
-                <option value="1">Selcionar carrera</option>
+                <option value="0">Selcionar carrera</option>
 
                 {careers && <ListOfCareer careers={careers} />}
               </Field>
@@ -117,7 +126,7 @@ export const Register = () => {
                 <option value="" disabled>
                   Selcionar Año
                 </option>
-                <option value="1">Selcionar carrera</option>
+                <option value="0">Selcionar carrera</option>
 
                 {careerYears && <ListOfCareerYear careerYears={careerYears} />}
               </Field>
@@ -132,7 +141,7 @@ export const Register = () => {
               <ToggleablePasswordField />
             </div>
 
-            <button className="btn" type="submit">
+            <button className="btn button" type="submit">
               Aceptar
             </button>
           </Form>
