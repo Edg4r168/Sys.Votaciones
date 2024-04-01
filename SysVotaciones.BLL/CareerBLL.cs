@@ -17,7 +17,9 @@ namespace SysVotaciones.BLL
             _careerDAL = new CareerDAL(conn);
         }
 
-        public List<Career> GetAll() => _careerDAL.GetCareers();
+        public List<Career> GetAll(int offset, int amount) => _careerDAL.GetCareers(offset, amount);
+
+        public int GetTotal() => _careerDAL.GetTotalCareers();
 
         public Career? GeById(int id)
         {
@@ -29,8 +31,8 @@ namespace SysVotaciones.BLL
         {
             if (career.Name == null) return 0;
 
-            int rowsAffected = _careerDAL.SaveCareer(career);
-            return rowsAffected;
+            int currentId = _careerDAL.SaveCareer(career);
+            return currentId;
         }
 
         public int Delete(int id)
@@ -45,6 +47,13 @@ namespace SysVotaciones.BLL
 
             int rowsAffected = _careerDAL.UpdateCareer(career);
             return rowsAffected;
+        }
+
+        public List<Career> Search(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword)) return [];
+
+            return _careerDAL.SearchCareers(keyword);
         }
     }
 }
