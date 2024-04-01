@@ -1,0 +1,36 @@
+.container-textInputSearch {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  max-width: 380px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  cursor: text;
+  transition: border 0.3s ease;
+}
+
+.container-textInputSearch:focus-within {
+  border: 1px solid #007bff;
+  box-shadow: 0 0 5px rgb(160, 215, 255, 1);
+}
+
+.container-textInputSearch .inputSearch {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+}
+
+.container-textInputSearch svg {
+  height: 1.5rem;
+  margin: 0 10px;
+}
+
+.form-search-categories {
+  display: flex;
+  gap: 24px;
+  width: 60%;
+}
