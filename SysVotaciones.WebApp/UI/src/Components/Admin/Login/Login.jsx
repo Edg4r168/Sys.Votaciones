@@ -1,10 +1,10 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { loginAdService } from "src/Services/loginAdService";
 import { ToggleablePasswordField } from "../../ToggleablePasswordField/ToggleablePasswordField";
 
 import "src/Components/User/Register/index.css";
-import { useState } from "react";
 import { Notification } from "src/Components/Notification/Notification";
+import { useAdmin } from "src/hooks/useAdmin";
+import { Redirect } from "wouter";
 
 const initialValues = {
   user: "",
@@ -24,32 +24,23 @@ const validateFiels = ({ user, password }) => {
 };
 
 export const Login = () => {
-  const [error, setError] = useState("");
-  const [logged, setLogged] = useState("");
+  const { isLogged, login, errorMessage, setErrorMessage } = useAdmin();
 
-  const handleOnSubmit = ({ user, password }) => {
-    loginAdService({ user, password })
-      .then(({ token, message }) => {
-        if (!token) setError(message);
-        setLogged(message);
-        console.log(token);
-      })
-      .catch((err) => {
-        setError(err.message);
-      });
+  const handleOnSubmit = (admin) => {
+    return login(admin);
   };
 
   return (
     <>
-      {error && (
-        <Notification duration={5000} onTimeout={() => setError("")}>
-          {error}
-        </Notification>
-      )}
+      {isLogged && <Redirect to="/dashboard" replace />}
 
-      {logged && (
-        <Notification duration={3000} onTimeout={() => setLogged("")}>
-          {logged}
+      {errorMessage && (
+        <Notification
+          duration={5000}
+          type="error"
+          onAnimationEnd={() => setErrorMessage("")}
+        >
+          {errorMessage}
         </Notification>
       )}
 
