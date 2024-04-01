@@ -8,14 +8,9 @@ using SysVotaciones.EN;
 
 namespace SysVotaciones.BLL
 {
-    public class AdminBLL
+    public class AdminBLL(string conn)
     {
-        private readonly AdminDAL _adminDAL;
-
-        public AdminBLL(string conn)
-        {
-            _adminDAL = new AdminDAL(conn);
-        }
+        private readonly AdminDAL _adminDAL = new AdminDAL(conn);
 
         public LoginResult Login(Admin admin)
         {
@@ -27,7 +22,7 @@ namespace SysVotaciones.BLL
             bool existsAdmin = _adminDAL.Login(admin);
             if (!existsAdmin) return response;
 
-            string token = Helper.GenerateToken(admin.User, "admin");
+            string token = Helper.GenerateToken(admin.User ?? "", "admin");
 
             response.Logged = true;
             response.Token = token;
