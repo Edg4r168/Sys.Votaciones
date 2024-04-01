@@ -1,0 +1,51 @@
+.admin-form,
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-form {
+  justify-content: center;
+  align-items: center;
+
+  gap: 30px;
+  height: 100%;
+  width: 100%;
+  color: #36202c;
+}
+
+.form-group {
+  width: 100%;
+  max-width: 350px;
+  gap: 10px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #ccc;
+  background-color: transparent;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: border-bottom 0.3s ease-out, box-shadow 0.3s ease;
+}
+
+/* box-shadow: rgba(100, 100, 111, 0.3) 0px 7px 29px 0px;
+border: 2px solid rgb(240, 240, 240); 
+*/
+
+.form-group input:focus {
+  outline: none;
+  border-color: #007bff;
+  /* box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); */
+  box-shadow: 0 2px 5px rgba(0, 123, 255, 0.5);
+}
+
+.container-btns {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 32px;
+  color: #fafafa;
+}
