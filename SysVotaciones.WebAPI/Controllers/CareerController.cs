@@ -22,18 +22,36 @@ namespace SysVotaciones.WebAPI.Controllers
           /Career
         */
         [HttpGet]
-        public ActionResult<List<Career>> GetAll()
+        public ActionResult<List<Career>> GetAll([FromQuery] int offset, int amount)
         {
             List<Career> listCareer = [];
             try
             {
-                listCareer = _careerBLL.GetAll();
+                listCareer = _careerBLL.GetAll(offset, amount);
 
                 return Ok(new { ok = true, data = listCareer });
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { ok = false, data = listCareer });
+            }
+        }
+
+        /*
+           /Career/total
+        */
+        [HttpGet("total")]
+        public ActionResult GetTotal()
+        {
+            try
+            {
+                int total = _careerBLL.GetTotal();
+
+                return Ok(new { ok = true, total });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { ok = false, total = 0 });
             }
         }
 
@@ -64,17 +82,27 @@ namespace SysVotaciones.WebAPI.Controllers
         [HttpPost("save")]
         public IActionResult Save(Career career)
         {
+            Career? currentCareer = null;
             try
             {
-                int rowsAffected = _careerBLL.Save(career);
+                int currentId = _careerBLL.Save(career);
 
-                if (rowsAffected > 0) return Ok(new { ok = true, message = "Registro guardado" });
+                if (currentId > 0)
+                {
+                    currentCareer = _careerBLL.GeById(currentId);
+                    return Ok(new { ok = true, data = currentCareer, message = "Registro guardado" });
+                }
 
-                return BadRequest(new { ok = false, message = "Error al guardar" });
+                return BadRequest(new { ok = false, data = currentCareer, message = "Error al guardar" });
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { ok = false, message = "Ha ocurrido un error inesperado" });
+                return StatusCode(StatusCodes.Status500InternalServerError, 
+                new { 
+                    ok = false, 
+                    data = currentCareer, 
+                    message = "Ha ocurrido un error inesperado" 
+                });
             }
         }
 
@@ -116,6 +144,25 @@ namespace SysVotaciones.WebAPI.Controllers
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { ok = false, message = "Ha ocurrido un error inesperado" });
+            }
+        }
+
+        /*
+           /Career/search?keyword
+        */
+        [HttpGet("search")]
+        public ActionResult<List<Career>> Search([FromQuery] string keyword)
+        {
+            List<Career> listCareer = [];
+            try
+            {
+                listCareer = _careerBLL.Search(keyword);
+
+                return Ok(new { ok = true, data = listCareer });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { ok = false, data = listCareer });
             }
         }
     }

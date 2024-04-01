@@ -17,48 +17,40 @@ namespace SysVotaciones.WebAPI.Controllers
             _YearBLL = yearBLLl;
         }
 
-        /*[HttpGet]
-        public async Task<ActionResult<List<Year>>> GetAllAsync()
-        {
-            List<Year> listYears = await _YearBLL.GetAllAsync();
-
-            return StatusCode(StatusCodes.Status200OK, new { ok = true, data = listYears });
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Year>> GetById(int id)
-        {
-            Year? year = await _YearBLL.GeById(id);
-
-            return StatusCode(StatusCodes.Status200OK, new { ok = true, data = year });
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> SaveAsync(Year year)
-        {
-            int rowsAffected = await _YearBLL.SaveAsync(year);
-
-            if (rowsAffected > 0) return StatusCode(StatusCodes.Status200OK, new { ok = true, data = rowsAffected });
-
-            return StatusCode(StatusCodes.Status200OK, new { ok = false, data = "Error al guardar" });
-        }*/
-
         /*
           /Year
         */
         [HttpGet]
-        public ActionResult<List<Year>> GetAll()
+        public ActionResult<List<Year>> GetAll([FromQuery] int offset, int amount)
         {
             List<Year> listYears = [];
             try
             {
-                listYears = _YearBLL.GetAll();
+                listYears = _YearBLL.GetAll(offset, amount);
 
                 return Ok(new { ok = true, data = listYears });
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { ok = false, data = listYears });
+            }
+        }
+
+        /*
+           /Year/total
+        */
+        [HttpGet("total")]
+        public ActionResult GetTotal()
+        {
+            try
+            {
+                int total = _YearBLL.GetTotal();
+
+                return Ok(new { ok = true, total });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { ok = false, total = 0 });
             }
         }
 
@@ -89,17 +81,22 @@ namespace SysVotaciones.WebAPI.Controllers
         [HttpPost("save")]
         public IActionResult Save(Year year)
         {
+            Year? currentYear = null;
             try
             {
-                int rowsAffected = _YearBLL.Save(year);
+                int currentId = _YearBLL.Save(year);
 
-                if (rowsAffected > 0) return Ok(new { ok = true, message = "Registro guardado" });
+                if (currentId > 0)
+                {
+                    currentYear = _YearBLL.GeById(currentId);
+                    return Ok(new { ok = true, data = currentYear, message = "Registro guardado" });
+                }
 
-                return BadRequest(new { ok = false, message = "Error al guardar" });
+                return BadRequest(new { ok = false, data = currentYear, message = "Error al guardar" });
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { ok = false, message = "Ha ocurrido un error inesperado" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ok = false, data = currentYear, message = "Ha ocurrido un error inesperado" });
             }
         }
 
@@ -141,6 +138,25 @@ namespace SysVotaciones.WebAPI.Controllers
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { ok = false, message = "Ha ocurrido un error inesperado" });
+            }
+        }
+
+        /*
+           /Year/search?keyword
+        */
+        [HttpGet("search")]
+        public ActionResult<List<Year>> Search([FromQuery] string keyword)
+        {
+            List<Year> listYear = [];
+            try
+            {
+                listYear = _YearBLL.Search(keyword);
+
+                return Ok(new { ok = true, data = listYear });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { ok = false, data = listYear });
             }
         }
     }

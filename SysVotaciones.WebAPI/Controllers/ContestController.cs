@@ -21,18 +21,36 @@ namespace SysVotaciones.WebAPI.Controllers
             /Contest
         */
         [HttpGet]
-        public ActionResult<List<Contest>> GetAll()
+        public ActionResult<List<Contest>> GetAll([FromQuery] int offset, int amount)
         {
             List<Contest> listContest = [];
             try
             {
-                listContest = _contestBLL.GetAll();
+                listContest = _contestBLL.GetAll(offset, amount);
 
                 return Ok(new { ok = true, data = listContest });
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { ok = false, data = listContest });
+            }
+        }
+
+        /*
+           /Contest/total
+        */
+        [HttpGet("total")]
+        public ActionResult GetTotal()
+        {
+            try
+            {
+                int total = _contestBLL.GetTotal();
+
+                return Ok(new { ok = true, total });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { ok = false, total = 0 });
             }
         }
 
@@ -63,17 +81,22 @@ namespace SysVotaciones.WebAPI.Controllers
         [HttpPost("save")]
         public IActionResult Save(Contest contest)
         {
+            Contest? currentContest = null;
             try
             {
-                int rowsAffected = _contestBLL.Save(contest);
+                int currentId = _contestBLL.Save(contest);
 
-                if (rowsAffected > 0) return Ok(new { ok = true, message = "Registro guardado" });
+                if (currentId > 0)
+                {
+                    currentContest = _contestBLL.GeById(currentId);
+                    return Ok(new { ok = true, data = currentContest, message = "Registro guardado" });
+                }
 
-                return BadRequest(new { ok = false, message = "Error al guardar" });
+                return BadRequest(new { ok = false, data = currentContest, message = "Error al guardar" });
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { ok = false, message = "Ha ocurrido un error inesperado" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ok = false, data = currentContest, message = "Ha ocurrido un error inesperado" });
             }
         }
 
@@ -115,6 +138,25 @@ namespace SysVotaciones.WebAPI.Controllers
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { ok = false, message = "Ha ocurrido un error inesperado" });
+            }
+        }
+
+        /*
+           /Contest/search?keyword
+        */
+        [HttpGet("search")]
+        public ActionResult<List<Contest>> Search([FromQuery] string keyword)
+        {
+            List<Contest> listContest = [];
+            try
+            {
+                listContest = _contestBLL.Search(keyword);
+
+                return Ok(new { ok = true, data = listContest });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { ok = false, data = listContest });
             }
         }
     }
