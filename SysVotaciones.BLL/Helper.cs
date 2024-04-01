@@ -21,7 +21,7 @@ namespace SysVotaciones.BLL
 
                 if (value is int && (int)value == default) return false;
 
-                if (value == null || (value is string && string.IsNullOrWhiteSpace((string)value))) 
+                if (value == null || (value is string && string.IsNullOrWhiteSpace((string)value)))
                     return false;
             }
 
@@ -31,15 +31,15 @@ namespace SysVotaciones.BLL
         public static string GenerateToken(string user = "", string role = "")
         {
 
-            byte[] byteKey = Encoding.UTF8.GetBytes(secretKey); 
+            byte[] byteKey = Encoding.UTF8.GetBytes(secretKey);
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescription = new SecurityTokenDescriptor()
             {
-                Subject = new ClaimsIdentity(new[]
-                {
+                Subject = new ClaimsIdentity(
+                [
                     new Claim(ClaimTypes.NameIdentifier, user),
                     new Claim(ClaimTypes.Role, role)
-                }),
+                ]),
                 Expires = DateTime.UtcNow.AddMinutes(20),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(byteKey),
                                                             SecurityAlgorithms.HmacSha256Signature)
@@ -78,7 +78,7 @@ namespace SysVotaciones.BLL
 
                 // Acceder a una reclamación específica por su tipo
                 var claim = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier);
-                
+
                 return claim;
             }
             catch (Exception)
