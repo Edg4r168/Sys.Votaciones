@@ -17,7 +17,9 @@ namespace SysVotaciones.BLL
             _contestDAL = new ContestDAL(conn);
         }
 
-        public List<Contest> GetAll() => _contestDAL.GetContests();
+        public List<Contest> GetAll(int offset, int amount) => _contestDAL.GetContests(offset, amount);
+
+        public int GetTotal() => _contestDAL.GetTotalContests();
 
         public Contest? GeById(int id)
         {
@@ -37,8 +39,8 @@ namespace SysVotaciones.BLL
             
             if (!isValid) return 0;
 
-            int rowsAffected = _contestDAL.SaveContest(contest);
-            return rowsAffected;
+            int currentId = _contestDAL.SaveContest(contest);
+            return currentId;
         }
 
         public int Delete(int id)
@@ -53,6 +55,13 @@ namespace SysVotaciones.BLL
 
             int rowsAffected = _contestDAL.UpdateContest(contest);
             return rowsAffected;
+        }
+
+        public List<Contest> Search(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword)) return [];
+
+            return _contestDAL.SearchContests(keyword);
         }
     }
 }

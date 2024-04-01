@@ -17,7 +17,9 @@ namespace SysVotaciones.BLL
             _categoryDAL = new CategoryDAL(conn);
         }
 
-        public List<Category> GetAll() => _categoryDAL.GetCategories();
+        public List<Category> GetAll(int offset, int amount) => _categoryDAL.GetCategories(offset, amount);
+
+        public int GetTotal() => _categoryDAL.GetTotalCategories();
 
         public Category? GeById(int id)
         {
@@ -29,8 +31,8 @@ namespace SysVotaciones.BLL
         {
             if (category.Name == null) return 0;
 
-            int rowsAffected = _categoryDAL.SaveCategory(category);
-            return rowsAffected;
+            int currentId = _categoryDAL.SaveCategory(category);
+            return currentId;
         }
 
         public int Delete(int id)
@@ -46,5 +48,12 @@ namespace SysVotaciones.BLL
             int rowsAffected = _categoryDAL.UpdateCategory(category);
             return rowsAffected;
         }
+
+        public List<Category> Search(string keyword) 
+        {
+            if (string.IsNullOrEmpty(keyword)) return [];
+
+            return _categoryDAL.SearchCategories(keyword);
+        }        
     }
 }
