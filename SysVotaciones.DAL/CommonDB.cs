@@ -5,11 +5,6 @@ namespace SysVotaciones.DAL
 {
     public class CommonDB
     {
-        //private static readonly string _connectionString = "Data Source=Edgar168\\SQLEXPRESS;Initial Catalog=PROYECTO_VOTACIONES;Integrated Security=True;";
-        //private static readonly string _connectionString = "workstation id=PROYECTO_VOTACIONES.mssql.somee.com;packet size=4096;user id=edgar168_SQLLogin_1;pwd=gak7bkxado;data source=PROYECTO_VOTACIONES.mssql.somee.com;persist security info=False;initial catalog=PROYECTO_VOTACIONES";
-        private static readonly string _connectionString = "Server=EDGAR168\\SQLEXPRESS;Database=PROYECTO_VOTACIONES;User Id=sa;Password=12345678910SA;TrustServerCertificate=true;";
-
-
         /*private static async Task<SqlConnection?> GetConnectionAsync()
         {
             var conn = new SqlConnection(_connectionString);
