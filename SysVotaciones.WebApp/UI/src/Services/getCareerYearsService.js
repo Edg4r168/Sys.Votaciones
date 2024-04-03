@@ -1,4 +1,4 @@
-import { baseUrl } from "../consts";
+import { baseUrl } from "../consts/consts";
 
 export const getCareerYearsService = async () => {
   try {
