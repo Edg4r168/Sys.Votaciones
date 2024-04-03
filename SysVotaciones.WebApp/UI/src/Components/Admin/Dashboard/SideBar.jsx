@@ -1,6 +1,6 @@
 import { UsersIcon } from "src/Components/Icons";
 import { Link } from "wouter";
-import { SECTIONS_DASHBOARD } from "../../../consts/sections";
+import { SECTIONS_DASHBOARD } from "src/consts/sections";
 
 const ICONS = {
   categories: <UsersIcon />,
