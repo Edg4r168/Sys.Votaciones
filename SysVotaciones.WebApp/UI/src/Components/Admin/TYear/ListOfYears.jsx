@@ -5,7 +5,8 @@ import { FormEdit } from "./FormEdit";
 import { FormDelete } from "./FormDelete";
 import { TABLE_ACTIONS } from "src/consts/consts";
 import { useTable } from "src/hooks/useTable";
-import { Row } from "src/Ccreate component ListOfCarrers
+import { Row } from "src/Ccreate component ListOfCarrers";
+
 export function ListOfYears() {
   const [showModal, setShowModal] = useState({ isOpen: false, action: null });
   const { loading, entries, getEntry } = useTable();
