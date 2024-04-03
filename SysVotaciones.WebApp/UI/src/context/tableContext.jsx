@@ -49,8 +49,6 @@ export function TableProvider({ children, table }) {
   const offset = useRef(initialOffset);
 
   useEffect(() => {
-    setMessages({ error: null, success: null });
-
     getService({ offset: 0, amount: amountEntries, table })
       .then(({ data, message }) => {
         if (!data) return setMessages({ error: message, success: null });
