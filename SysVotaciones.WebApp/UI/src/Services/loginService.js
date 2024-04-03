@@ -1,4 +1,4 @@
-import { ERRORS, baseUrl } from "../consts";
+import { ERRORS, baseUrl } from "../consts/consts";
 
 export const loginService = async ({ studentCode, password }) => {
   try {
@@ -15,7 +15,7 @@ export const loginService = async ({ studentCode, password }) => {
     if (!res.ok)
       return { token: null, message: ERRORS.login.invalidCredentials };
 
-    return { token: res.token, message: "Te has registrado correctamente" };
+    return { token: res.token, message: "" };
   } catch (error) {
     throw new Error(ERRORS.login.loginError);
   }
