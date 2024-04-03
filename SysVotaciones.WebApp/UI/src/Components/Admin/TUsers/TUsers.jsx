@@ -14,6 +14,7 @@ import { CardHeader } from "src/Components/Table/CardHeader";
 import { Title } from "src/Components/Table/Title";
 import { CardFooter } from "src/Components/Table/CardFooter";
 import { Thead } from "src/Components/Table/Thead";
+import { Tbody } from "src/Components/Table/Tbody";
 
 export function TUsers() {
   const [showModal, setShowModal] = useState(false);
@@ -61,7 +62,9 @@ export function TUsers() {
             <th>Acciones</th>
           </Thead>
 
-          <tbody>{<ListOfUsers />}</tbody>
+          <Tbody entries={entries}>
+            <ListOfUsers />
+          </Tbody>
         </Table>
 
         <CardFooter>
