@@ -5,6 +5,7 @@ import { FormEdit } from "./FormEdit";
 import { FormDelete } from "./FormDelete";
 import { TABLE_ACTIONS } from "src/consts/consts";
 import { useTable } from "src/hooks/useTable";
+import { Row } from "src/Components/Table/Row";
 
 export function ListOfUsers() {
   const [showModal, setShowModal] = useState({ isOpen: false, action: null });
@@ -35,7 +36,7 @@ export function ListOfUsers() {
           if (entry == null) return;
 
           return (
-            <tr key={entry.studentCode}>
+            <Row key={entry.studentCode}>
               <td>{entry.studentCode}</td>
               <td>{entry.careerYear}</td>
               <td>{entry.career}</td>
@@ -54,7 +55,7 @@ export function ListOfUsers() {
                   <EditIcon />
                 </button>
               </td>
-            </tr>
+            </Row>
           );
         })
       ) : (
