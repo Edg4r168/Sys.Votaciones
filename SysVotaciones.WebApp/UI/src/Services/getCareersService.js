@@ -1,10 +1,9 @@
-import { baseUrl } from "../consts";
+import { baseUrl } from "../consts/consts";
 
 export const getCareersService = async () => {
   try {
     const response = await fetch(`${baseUrl}/Career`);
     const res = await response.json();
-    console.log(res);
 
     if (!res.ok) return [];
 
