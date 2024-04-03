@@ -3,8 +3,8 @@ import { DropDownMenu } from "src/Components/DropDownMenu";
 import { TableProvider } from "src/context/tableContext";
 import { SideBar } from "./SideBar";
 import { Match } from "src/Components/Match/Match";
-import { SECTIONS_DASHBOARD } from "../../../consts/sections";
-import { TABLES } from "src/consts/consts";
+import { SECTIONS_DASHBOARD } from "src/consts/sections";
+import { TABLES } from "src/consts/tables";
 
 export function Dashboard({ params }) {
   const currentSection = params?.section;
