@@ -1,4 +1,4 @@
-import { ERRORS, baseUrl } from "../consts.js";
+import { ERRORS, baseUrl } from "../consts/consts.js";
 
 export const registerService = async (student) => {
   try {
@@ -12,9 +12,9 @@ export const registerService = async (student) => {
 
     const res = await response.json();
 
-    if (!res.ok) return false;
+    if (!res.ok) return { ok: res.ok, message: ERRORS.register.registerError };
 
-    return true;
+    return { ok: res.ok, message: "Te has registrado correctamente" };
   } catch (error) {
     throw new Error(ERRORS.register.registerError);
   }
