@@ -44,6 +44,7 @@
 .table thead {
   position: sticky;
   top: 0;
+  z-index: 10;
   background-color: #a0d7ff;
 }
 
@@ -54,6 +55,15 @@
 .table tr {
   border-bottom: 1px solid #e5e7eb;
 }
+
+.table-row {
+  opacity: 0;
+  animation: fade-in 0.3s ease-in forwards;
+}
+
+/* .fade-in {
+  animation: fade-in 0.3s ease-in forwards;
+} */
 
 /* tr::before {
   content: counter(row-num);
@@ -104,4 +114,10 @@
   justify-content: center;
   align-items: center;
   height: 40px;
+}
+
+@keyframes fade-in {
+  100% {
+    opacity: 1;
+  }
 }
